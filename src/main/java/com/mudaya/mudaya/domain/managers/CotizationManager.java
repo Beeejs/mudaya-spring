@@ -56,7 +56,10 @@ public class CotizationManager {
         return cotizationRepository.save(cotization).getId();
     }
 
-    public void delete(Cotization cotization) {
-        cotizationRepository.deleteById(cotization.getId());
+    public void delete(UUID id) {
+        if (!cotizationRepository.existsById(id)) {
+            throw new RuntimeException("La cotización no existe");
+        }
+        cotizationRepository.deleteById(id);
     }
 }

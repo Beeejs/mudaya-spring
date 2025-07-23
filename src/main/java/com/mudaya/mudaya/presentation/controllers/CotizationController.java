@@ -26,7 +26,7 @@ public class CotizationController {
         return ResponseEntity.ok(cotizationManager.getAll(filter, limit));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getOne/{id}")
     public ResponseEntity<Cotization> getOne(@PathVariable UUID id) {
         return ResponseEntity.ok(cotizationManager.getOne(id));
     }
@@ -41,9 +41,9 @@ public class CotizationController {
         return ResponseEntity.ok(cotizationManager.update(cotization));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody Cotization cotization) {
-        cotizationManager.delete(cotization);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        cotizationManager.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

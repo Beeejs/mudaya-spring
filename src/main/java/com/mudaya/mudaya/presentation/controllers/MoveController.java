@@ -30,7 +30,7 @@ public class MoveController {
         return ResponseEntity.ok(moveManager.getAll(filter, dateFilter, stateFilter, limit));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getOne/{id}")
     public ResponseEntity<Move> getOne(@PathVariable UUID id) {
         return ResponseEntity.ok(moveManager.getOne(id));
     }
@@ -45,9 +45,9 @@ public class MoveController {
         return ResponseEntity.ok(moveManager.update(move));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody Move move) {
-        moveManager.delete(move);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        moveManager.delete(id);
         return ResponseEntity.ok().build();
     }
 }

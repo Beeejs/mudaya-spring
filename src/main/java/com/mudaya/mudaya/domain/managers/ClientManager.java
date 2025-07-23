@@ -10,21 +10,21 @@ import java.util.UUID;
 @Service
 public class ClientManager {
 
-    private final ClientRepository clientRepo;
+    private final ClientRepository clientRepository;
 
-    public ClientManager(ClientRepository clientRepo) {
-        this.clientRepo = clientRepo;
+    public ClientManager(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
     public List<Client> getAll(String filter, Integer limit) {
         List<Client> result;
 
         if (filter != null && !filter.trim().isEmpty()) {
-            result = clientRepo.findByNameContainingIgnoreCaseOrSurnameContainingIgnoreCaseOrDni(
+            result = clientRepository.findByNameContainingIgnoreCaseOrSurnameContainingIgnoreCaseOrDni(
                     filter, filter, filter
             );
         } else {
-            result = clientRepo.findAll();
+            result = clientRepository.findAll();
         }
 
         if (limit != null && limit > 0 && limit < result.size()) {
@@ -35,7 +35,7 @@ public class ClientManager {
     }
 
     public Client getOne(UUID id) {
-        return clientRepo.findById(id)
+        return clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
     }
 
@@ -43,17 +43,20 @@ public class ClientManager {
         if (client.getId() == null) {
             client.setId(UUID.randomUUID());
         }
-        return clientRepo.save(client);
+        return clientRepository.save(client);
     }
 
     public UUID update(Client client) {
-        if (!clientRepo.existsById(client.getId())) {
+        if (!clientRepository.existsById(client.getId())) {
             throw new RuntimeException("Cliente no existe");
         }
-        return clientRepo.save(client).getId();
+        return clientRepository.save(client).getId();
     }
 
-    public void delete(Client client) {
-        clientRepo.deleteById(client.getId());
+    public void delete(UUID id) {
+        if (!clientRepository.existsById(id)) {
+            throw new RuntimeException("Cliente no existe");
+        }
+        clientRepository.deleteById(id);
     }
 }

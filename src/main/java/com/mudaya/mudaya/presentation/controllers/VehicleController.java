@@ -24,7 +24,7 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleManager.getAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getOne/{id}")
     public ResponseEntity<Vehicle> getOne(@PathVariable UUID id) {
         return vehicleManager.getOne(id)
                 .map(ResponseEntity::ok)
@@ -51,9 +51,9 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleManager.update(vehicle));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody Vehicle vehicle) {
-        vehicleManager.delete(vehicle);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        vehicleManager.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

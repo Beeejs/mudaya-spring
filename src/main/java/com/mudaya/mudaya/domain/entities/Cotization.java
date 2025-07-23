@@ -38,7 +38,7 @@ public class Cotization {
   @Column(name = "numberofhelpers", nullable = false)
   private int numberOfHelpers;
 
-  @Column(nullable = false, precision = 10, scale = 2)
+  @Column(nullable = false)
   private double price;
 
   @Column(length = 250)

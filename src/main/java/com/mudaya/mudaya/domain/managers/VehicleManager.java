@@ -45,7 +45,10 @@ public class VehicleManager {
         return vehicleRepository.save(vehicle).getId();
     }
 
-    public void delete(Vehicle vehicle) {
-        vehicleRepository.delete(vehicle);
+    public void delete(UUID id) {
+        if (!vehicleRepository.existsById(id)) {
+            throw new RuntimeException("El vehiculo no existe");
+        }
+        vehicleRepository.deleteById(id);
     }
 }

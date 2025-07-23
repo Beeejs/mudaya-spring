@@ -26,7 +26,7 @@ public class ClientController {
         return ResponseEntity.ok(clientManager.getAll(filter, limit));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getOne/{id}")
     public ResponseEntity<Client> getOne(@PathVariable UUID id) {
         return ResponseEntity.ok(clientManager.getOne(id));
     }
@@ -41,9 +41,9 @@ public class ClientController {
         return ResponseEntity.ok(clientManager.update(client));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody Client client) {
-        clientManager.delete(client);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        clientManager.delete(id);
         return ResponseEntity.ok().build();
     }
 }

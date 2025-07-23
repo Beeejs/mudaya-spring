@@ -37,10 +37,10 @@ public class TransporterManager {
         return transporter.getId();
     }
 
-    public void delete(Transporter transporter) {
-        if (!transporterRepository.existsById(transporter.getId())) {
-            throw new RuntimeException("Transporter no encontrado");
+    public void delete(UUID id) {
+        if (!transporterRepository.existsById(id)) {
+            throw new RuntimeException("El transportador no existe");
         }
-        transporterRepository.deleteById(transporter.getId());
+        transporterRepository.deleteById(id);
     }
 }

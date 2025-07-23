@@ -12,22 +12,22 @@ import java.util.UUID;
 @Service
 public class RoleManager {
 
-    private final RoleRepository roleRepo;
+    private final RoleRepository roleRepository;
 
-    public RoleManager(RoleRepository roleRepo) {
-        this.roleRepo = roleRepo;
+    public RoleManager(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     public List<Role> getAll() {
-        return roleRepo.findAll();
+        return roleRepository.findAll();
     }
 
     public Role getOneByField(String field, String value) {
         return switch (field) {
-            case "id" -> roleRepo.findById(UUID.fromString(value))
-                    .orElseThrow(() -> new RuntimeException("Rol no encontrado por id"));
-            case "name" -> roleRepo.findByName(UserRol.valueOf(value.toUpperCase()))
-                    .orElseThrow(() -> new RuntimeException("Rol no encontrado por nombre"));
+            case "id" -> roleRepository.findById(UUID.fromString(value))
+                    .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+            case "name" -> roleRepository.findByName(UserRol.valueOf(value.toUpperCase()))
+                    .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
             default -> throw new IllegalArgumentException("Campo inválido para búsqueda de rol");
         };
     }
@@ -36,17 +36,20 @@ public class RoleManager {
         if (role.getId() == null) {
             role.setId(UUID.randomUUID());
         }
-        return roleRepo.save(role);
+        return roleRepository.save(role);
     }
 
     public UUID update(Role role) {
-        if (!roleRepo.existsById(role.getId())) {
+        if (!roleRepository.existsById(role.getId())) {
             throw new RuntimeException("El rol no existe");
         }
-        return roleRepo.save(role).getId();
+        return roleRepository.save(role).getId();
     }
 
-    public void delete(Role role) {
-        roleRepo.deleteById(role.getId());
+    public void delete(UUID id) {
+        if (!roleRepository.existsById(id)) {
+            throw new RuntimeException("El rol no existe");
+        }
+        roleRepository.deleteById(id);
     }
 }

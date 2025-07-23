@@ -46,9 +46,9 @@ public class RoleController {
         return ResponseEntity.ok(roleManager.update(role));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody Role role) {
-        roleManager.delete(role);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        roleManager.delete(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -45,7 +45,10 @@ public class MoveManager {
         return moveRepository.save(move).getId();
     }
 
-    public void delete(Move move) {
-        moveRepository.deleteById(move.getId());
+    public void delete(UUID id) {
+        if (!moveRepository.existsById(id)) {
+            throw new RuntimeException("Mudanza no existe");
+        }
+        moveRepository.deleteById(id);
     }
 }

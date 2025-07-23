@@ -23,7 +23,7 @@ public class TransporterController {
         return ResponseEntity.ok(transporterManager.getAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getOne/{id}")
     public ResponseEntity<Transporter> getOne(@PathVariable UUID id) {
         return transporterManager.getOne(id)
                 .map(ResponseEntity::ok)
@@ -40,9 +40,9 @@ public class TransporterController {
         return ResponseEntity.ok(transporterManager.update(transporter));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody Transporter transporter) {
-        transporterManager.delete(transporter);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        transporterManager.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

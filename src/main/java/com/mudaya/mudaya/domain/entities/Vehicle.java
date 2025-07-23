@@ -29,13 +29,13 @@ public class Vehicle {
   @Column(length = 50)
   private VehicleType type;
 
-  @Column(name = "capacity_kg", precision = 10, scale = 2)
+  @Column(name = "capacity_kg")
   private double capacityKg;
 
-  @Column(name = "area_m2", precision = 10, scale = 2)
+  @Column(name = "area_m2")
   private double areaM2;
 
-  @Column(name = "volume_m3", precision = 10, scale = 2)
+  @Column(name = "volume_m3")
   private double volumeM3;
 
   public Vehicle() {} // Necesario para JPA
