@@ -20,6 +20,13 @@ public class User extends People { // Usuario general de la app
   private Role role; // El tipo de rol del usuario
 
   public User(){ super(); } // Lo generamos por JPA
+
+  public User(String email, String password, Role role, String name, String surname, String telephoneNumber, String DNI, Sexo sexo) {
+    super(name, surname, telephoneNumber, DNI, sexo);
+    this.email = email;
+    this.password = password;
+    this.role = role;
+  }
   
   public User(UUID id, String email, String password, Role role, String name, String surname, String telephoneNumber, String DNI, Sexo sexo) {
     super(id, name, surname, telephoneNumber, DNI, sexo);

@@ -19,6 +19,10 @@ public class Role {
 
   public Role(){}; // Lo generamos por JPA
 
+  public Role(UserRol name) { // JPA crea automaticamente el UUID
+    this.name = name;
+  }
+
   public Role(UUID id, UserRol name) {
     this.id = id;
     this.name = name;
@@ -34,9 +38,6 @@ public class Role {
   }
 
   /* Setters */
-  public void setId(UUID id) {
-    this.id = id;
-  }
 
   public void setName(UserRol name) {
     this.name = name;

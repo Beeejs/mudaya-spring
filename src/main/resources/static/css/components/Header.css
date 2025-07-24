@@ -1,0 +1,14 @@
+.user-info
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-info i
+{
+  border-radius: 50%;
+  background-color: var(--primary);
+  padding: 5px 7px;
+}

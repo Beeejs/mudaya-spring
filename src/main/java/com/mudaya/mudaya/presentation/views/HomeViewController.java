@@ -16,6 +16,6 @@ public class HomeViewController {
             return "redirect:/login";
         }
 
-        return "home"; // si está logueado, va a home.html
+        return "index"; // si está logueado, va a home.html
     }
 }

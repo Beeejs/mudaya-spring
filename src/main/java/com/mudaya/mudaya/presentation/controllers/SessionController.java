@@ -2,6 +2,7 @@ package com.mudaya.mudaya.presentation.controllers;
 
 import com.mudaya.mudaya.domain.entities.User;
 import com.mudaya.mudaya.domain.managers.SessionManager;
+import com.mudaya.mudaya.presentation.utils.response.ApiResponse;
 import com.mudaya.mudaya.utils.PasswordUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,38 +18,38 @@ public class SessionController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<User>> login(@RequestBody User user) {
         try {
             User loggedInUser = sessionManager.login(user);
-            return ResponseEntity.ok(loggedInUser);
+            return ResponseEntity.ok(ApiResponse.success("Login exitoso", loggedInUser));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(ApiResponse.error("Login fallido: " + e.getMessage()));
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<User>> register(@RequestBody User user) {
         try {
             User registeredUser = sessionManager.register(user);
-            return ResponseEntity.ok(registeredUser);
+            return ResponseEntity.ok(ApiResponse.success("Registro exitoso", registeredUser));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(ApiResponse.error("Registro fallido: " + e.getMessage()));
         }
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<ApiResponse<Void>> logout() {
         sessionManager.logout();
-        return ResponseEntity.ok("Sesión cerrada correctamente");
+        return ResponseEntity.ok(ApiResponse.success("Sesión cerrada correctamente"));
     }
 
     @GetMapping("/current")
-    public ResponseEntity<?> current() {
+    public ResponseEntity<ApiResponse<User>> current() {
         User current = sessionManager.current();
         if (current != null) {
-            return ResponseEntity.ok(current);
+            return ResponseEntity.ok(ApiResponse.success("Sesión activa", current));
         } else {
-            return ResponseEntity.status(401).body("No hay sesión activa");
+            return ResponseEntity.status(401).body(ApiResponse.error("No hay sesión activa"));
         }
     }
 }

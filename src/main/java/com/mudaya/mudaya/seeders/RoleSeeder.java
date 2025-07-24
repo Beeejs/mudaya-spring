@@ -1,32 +1,31 @@
-/*
 package com.mudaya.mudaya.seeders;
 
-import com.mudaya.mudaya.data.repositories.RoleRepository;
 import com.mudaya.mudaya.domain.entities.Role;
 import com.mudaya.mudaya.domain.enums.UserRol;
+import com.mudaya.mudaya.domain.managers.RoleManager;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 public class RoleSeeder {
 
-    private final RoleRepository roleRepository;
+    private final RoleManager roleManager;
 
-    public RoleSeeder(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public RoleSeeder(RoleManager roleManager) {
+        this.roleManager = roleManager;
     }
 
     @PostConstruct
     public void seedRoles() {
         for (UserRol rol : UserRol.values()) {
-            roleRepository.findByName(rol).orElseGet(() -> {
-                Role role = new Role(UUID.randomUUID(), rol);
-                return roleRepository.save(role);
-            });
+            try {
+                roleManager.getOneByField("name", rol.name());
+                System.out.println("Rol " + rol + " ya existe.");
+            } catch (RuntimeException e) {
+                Role newRole = new Role(rol); // Ya no pasamos ID
+                roleManager.create(newRole);
+                System.out.println("Rol " + rol + " insertado.");
+            }
         }
-        System.out.println("Roles insertados si no existían.");
     }
 }
-*/

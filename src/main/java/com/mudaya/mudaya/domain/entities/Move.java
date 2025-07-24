@@ -36,7 +36,7 @@ public class Move {
 
   protected Move() {} // Constructor vacío para JPA
 
-  public Move(UUID id, List<MoveAssignment> transporters, User user_id, Cotization cotization, LocalDateTime movingDateTime, MovingState state) {
+  public Move(UUID id, List<MoveAssignment> transporters, User user, Cotization cotization, LocalDateTime movingDateTime, MovingState state) {
     this.id = id;
     this.transporters = transporters;
     this.user = user;
@@ -71,9 +71,6 @@ public class Move {
   }
 
   /* Setters */
-  public void setId(UUID id) {
-    this.id = id;
-  }
 
   public void setTransporter(ArrayList<MoveAssignment> transporters) {
     this.transporters = transporters;

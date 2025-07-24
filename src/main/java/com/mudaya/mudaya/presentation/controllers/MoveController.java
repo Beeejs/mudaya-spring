@@ -3,6 +3,7 @@ package com.mudaya.mudaya.presentation.controllers;
 import com.mudaya.mudaya.domain.entities.Move;
 import com.mudaya.mudaya.domain.enums.MovingState;
 import com.mudaya.mudaya.domain.managers.MoveManager;
+import com.mudaya.mudaya.presentation.utils.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,33 +22,37 @@ public class MoveController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Move>> getAll(
+    public ResponseEntity<ApiResponse<List<Move>>> getAll(
             @RequestParam(required = false) String filter,
             @RequestParam(required = false) LocalDate dateFilter,
             @RequestParam(required = false) MovingState stateFilter,
             @RequestParam(required = false) Integer limit
     ) {
-        return ResponseEntity.ok(moveManager.getAll(filter, dateFilter, stateFilter, limit));
+        List<Move> list = moveManager.getAll(filter, dateFilter, stateFilter, limit);
+        return ResponseEntity.ok(ApiResponse.success("Mudanzas encontradas", list));
     }
 
     @GetMapping("/getOne/{id}")
-    public ResponseEntity<Move> getOne(@PathVariable UUID id) {
-        return ResponseEntity.ok(moveManager.getOne(id));
+    public ResponseEntity<ApiResponse<Move>> getOne(@PathVariable UUID id) {
+        Move move = moveManager.getOne(id);
+        return ResponseEntity.ok(ApiResponse.success("Mudanza encontrada", move));
     }
 
     @PostMapping
-    public ResponseEntity<Move> create(@RequestBody Move move) {
-        return ResponseEntity.ok(moveManager.create(move));
+    public ResponseEntity<ApiResponse<Move>> create(@RequestBody Move move) {
+        Move created = moveManager.create(move);
+        return ResponseEntity.ok(ApiResponse.success("Mudanza creada correctamente", created));
     }
 
     @PutMapping
-    public ResponseEntity<UUID> update(@RequestBody Move move) {
-        return ResponseEntity.ok(moveManager.update(move));
+    public ResponseEntity<ApiResponse<UUID>> update(@RequestBody Move move) {
+        UUID updatedId = moveManager.update(move);
+        return ResponseEntity.ok(ApiResponse.success("Mudanza actualizada correctamente", updatedId));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
         moveManager.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponse.success("Mudanza eliminada correctamente"));
     }
 }

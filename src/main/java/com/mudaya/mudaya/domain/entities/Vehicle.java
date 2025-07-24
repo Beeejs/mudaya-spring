@@ -90,9 +90,6 @@ public class Vehicle {
   }
 
   /* Setters */
-  public void setId(UUID id) {
-    this.id = id;
-  }
 
   public void setBrand(String brand) {
     this.brand = brand;

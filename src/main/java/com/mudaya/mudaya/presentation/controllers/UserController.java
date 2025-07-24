@@ -2,6 +2,7 @@ package com.mudaya.mudaya.presentation.controllers;
 
 import com.mudaya.mudaya.domain.entities.User;
 import com.mudaya.mudaya.domain.managers.UserManager;
+import com.mudaya.mudaya.presentation.utils.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,36 +20,35 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll() {
-        return ResponseEntity.ok(userManager.getAll());
+    public ResponseEntity<ApiResponse<List<User>>> getAll() {
+        List<User> users = userManager.getAll();
+        return ResponseEntity.ok(ApiResponse.success("Usuarios encontrados", users));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<User> getOneByField(
+    public ResponseEntity<ApiResponse<User>> getOneByField(
             @RequestParam String field,
             @RequestParam String value
     ) {
-        try {
-            User user = userManager.getOneByField(field, value);
-            return ResponseEntity.ok(user);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        User user = userManager.getOneByField(field, value);
+        return ResponseEntity.ok(ApiResponse.success("Usuario encontrado", user));
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
-        return ResponseEntity.ok(userManager.create(user));
+    public ResponseEntity<ApiResponse<User>> create(@RequestBody User user) {
+        User created = userManager.create(user);
+        return ResponseEntity.ok(ApiResponse.success("Usuario creado", created));
     }
 
     @PutMapping
-    public ResponseEntity<UUID> update(@RequestBody User user) {
-        return ResponseEntity.ok(userManager.update(user));
+    public ResponseEntity<ApiResponse<UUID>> update(@RequestBody User user) {
+        UUID updatedId = userManager.update(user);
+        return ResponseEntity.ok(ApiResponse.success("Usuario actualizado", updatedId));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
         userManager.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success("Usuario eliminado"));
     }
 }

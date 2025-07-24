@@ -2,6 +2,7 @@ package com.mudaya.mudaya.domain.managers;
 
 import com.mudaya.mudaya.domain.entities.Cotization;
 import com.mudaya.mudaya.data.repositories.CotizationRepository;
+import com.mudaya.mudaya.presentation.utils.exceptions.ApiException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,26 +40,23 @@ public class CotizationManager {
 
     public Cotization getOne(UUID id) {
         return cotizationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cotización no encontrada"));
+                .orElseThrow(() -> new ApiException("Cotización no encontrada"));
     }
 
     public Cotization create(Cotization cotization) {
-        if (cotization.getId() == null) {
-            cotization.setId(UUID.randomUUID());
-        }
         return cotizationRepository.save(cotization);
     }
 
     public UUID update(Cotization cotization) {
         if (!cotizationRepository.existsById(cotization.getId())) {
-            throw new RuntimeException("La cotización no existe");
+            throw new ApiException("La cotización no existe");
         }
         return cotizationRepository.save(cotization).getId();
     }
 
     public void delete(UUID id) {
         if (!cotizationRepository.existsById(id)) {
-            throw new RuntimeException("La cotización no existe");
+            throw new ApiException("La cotización no existe");
         }
         cotizationRepository.deleteById(id);
     }

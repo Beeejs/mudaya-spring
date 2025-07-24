@@ -1,7 +1,9 @@
 package com.mudaya.mudaya.presentation.controllers;
 
+import com.mudaya.mudaya.domain.entities.User;
 import com.mudaya.mudaya.domain.entities.Vehicle;
 import com.mudaya.mudaya.domain.managers.VehicleManager;
+import com.mudaya.mudaya.presentation.utils.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,40 +22,42 @@ public class VehicleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Vehicle>> getAll() {
-        return ResponseEntity.ok(vehicleManager.getAll());
+    public ResponseEntity<ApiResponse<List<Vehicle>>> getAll() {
+        List<Vehicle> vehicles = vehicleManager.getAll();
+        return ResponseEntity.ok(ApiResponse.success("Vehículos encontrados", vehicles));
     }
 
     @GetMapping("/getOne/{id}")
-    public ResponseEntity<Vehicle> getOne(@PathVariable UUID id) {
-        return vehicleManager.getOne(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ApiResponse<Vehicle>> getOne(@PathVariable UUID id) {
+        Vehicle vehicle = vehicleManager.getOne(id);
+        return ResponseEntity.ok(ApiResponse.success("Vehículo encontrado", vehicle));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Vehicle> getOneByField(
+    public ResponseEntity<ApiResponse<Optional<Vehicle>>> getOneByField(
             @RequestParam String field,
             @RequestParam String value
     ) {
-        return vehicleManager.getOneByField(field, value)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().build());
+        Optional<Vehicle> vehicle = vehicleManager.getOneByField(field, value);
+        return ResponseEntity.ok(ApiResponse.success("Vehiculo encontrado", vehicle));
+
     }
 
     @PostMapping
-    public ResponseEntity<Vehicle> create(@RequestBody Vehicle vehicle) {
-        return ResponseEntity.ok(vehicleManager.create(vehicle));
+    public ResponseEntity<ApiResponse<Vehicle>> create(@RequestBody Vehicle vehicle) {
+        Vehicle created = vehicleManager.create(vehicle);
+        return ResponseEntity.ok(ApiResponse.success("Vehículo creado", created));
     }
 
     @PutMapping
-    public ResponseEntity<UUID> update(@RequestBody Vehicle vehicle) {
-        return ResponseEntity.ok(vehicleManager.update(vehicle));
+    public ResponseEntity<ApiResponse<UUID>> update(@RequestBody Vehicle vehicle) {
+        UUID updatedId = vehicleManager.update(vehicle);
+        return ResponseEntity.ok(ApiResponse.success("Vehículo actualizado", updatedId));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
         vehicleManager.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success("Vehículo eliminado"));
     }
 }

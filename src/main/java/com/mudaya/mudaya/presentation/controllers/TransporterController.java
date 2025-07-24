@@ -1,7 +1,9 @@
 package com.mudaya.mudaya.presentation.controllers;
 
 import com.mudaya.mudaya.domain.entities.Transporter;
+import com.mudaya.mudaya.domain.entities.User;
 import com.mudaya.mudaya.domain.managers.TransporterManager;
+import com.mudaya.mudaya.presentation.utils.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,30 +21,32 @@ public class TransporterController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Transporter>> getAll() {
-        return ResponseEntity.ok(transporterManager.getAll());
+    public ResponseEntity<ApiResponse<List<Transporter>>> getAll() {
+        List<Transporter> transporters = transporterManager.getAll();
+        return ResponseEntity.ok(ApiResponse.success("Transportistas encontrados", transporters));
     }
 
     @GetMapping("/getOne/{id}")
-    public ResponseEntity<Transporter> getOne(@PathVariable UUID id) {
-        return transporterManager.getOne(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ApiResponse<Transporter>> getOne(@PathVariable UUID id) {
+        Transporter transporter = transporterManager.getOne(id);
+        return ResponseEntity.ok(ApiResponse.success("Transportista encontrado", transporter));
     }
 
     @PostMapping
-    public ResponseEntity<Transporter> create(@RequestBody Transporter transporter) {
-        return ResponseEntity.ok(transporterManager.create(transporter));
+    public ResponseEntity<ApiResponse<Transporter>> create(@RequestBody Transporter transporter) {
+        Transporter created = transporterManager.create(transporter);
+        return ResponseEntity.ok(ApiResponse.success("Transportista creado", created));
     }
 
     @PutMapping
-    public ResponseEntity<UUID> update(@RequestBody Transporter transporter) {
-        return ResponseEntity.ok(transporterManager.update(transporter));
+    public ResponseEntity<ApiResponse<UUID>> update(@RequestBody Transporter transporter) {
+        UUID updatedId = transporterManager.update(transporter);
+        return ResponseEntity.ok(ApiResponse.success("Transportista actualizado", updatedId));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
         transporterManager.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success("Transportista eliminado"));
     }
 }

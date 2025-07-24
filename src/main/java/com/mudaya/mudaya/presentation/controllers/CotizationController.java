@@ -2,6 +2,7 @@ package com.mudaya.mudaya.presentation.controllers;
 
 import com.mudaya.mudaya.domain.entities.Cotization;
 import com.mudaya.mudaya.domain.managers.CotizationManager;
+import com.mudaya.mudaya.presentation.utils.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,31 +20,35 @@ public class CotizationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cotization>> getAll(
+    public ResponseEntity<ApiResponse<List<Cotization>>> getAll(
             @RequestParam(required = false) String filter,
             @RequestParam(required = false) Integer limit
     ) {
-        return ResponseEntity.ok(cotizationManager.getAll(filter, limit));
+        List<Cotization> list = cotizationManager.getAll(filter, limit);
+        return ResponseEntity.ok(ApiResponse.success("Cotizaciones encontradas!", list));
     }
 
     @GetMapping("/getOne/{id}")
-    public ResponseEntity<Cotization> getOne(@PathVariable UUID id) {
-        return ResponseEntity.ok(cotizationManager.getOne(id));
+    public ResponseEntity<ApiResponse<Cotization>> getOne(@PathVariable UUID id) {
+        Cotization cotization = cotizationManager.getOne(id);
+        return ResponseEntity.ok(ApiResponse.success("Cotización encontrada!", cotization));
     }
 
     @PostMapping
-    public ResponseEntity<Cotization> create(@RequestBody Cotization cotization) {
-        return ResponseEntity.ok(cotizationManager.create(cotization));
+    public ResponseEntity<ApiResponse<Cotization>> create(@RequestBody Cotization cotization) {
+        Cotization created = cotizationManager.create(cotization);
+        return ResponseEntity.ok(ApiResponse.success("Cotización creada correctamente", created));
     }
 
     @PutMapping
-    public ResponseEntity<UUID> update(@RequestBody Cotization cotization) {
-        return ResponseEntity.ok(cotizationManager.update(cotization));
+    public ResponseEntity<ApiResponse<UUID>> update(@RequestBody Cotization cotization) {
+        UUID updatedId = cotizationManager.update(cotization);
+        return ResponseEntity.ok(ApiResponse.success("Cotización actualizada correctamente", updatedId));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
         cotizationManager.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success("Cotización eliminada correctamente"));
     }
 }

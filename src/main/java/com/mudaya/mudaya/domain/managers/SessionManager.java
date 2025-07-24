@@ -4,6 +4,7 @@ import com.mudaya.mudaya.domain.entities.Role;
 import com.mudaya.mudaya.domain.entities.User;
 import com.mudaya.mudaya.data.repositories.UserRepository;
 import com.mudaya.mudaya.domain.enums.UserRol;
+import com.mudaya.mudaya.presentation.utils.exceptions.ApiException;
 import com.mudaya.mudaya.utils.PasswordUtils;
 import com.mudaya.mudaya.utils.RoleUtils;
 import org.springframework.stereotype.Service;
@@ -31,13 +32,13 @@ public class SessionManager {
         Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
 
         if (optionalUser.isEmpty()) {
-            throw new RuntimeException("No se encontró el usuario");
+            throw new ApiException("No se encontró el usuario");
         }
 
         User existingUser = optionalUser.get();
 
         if (!passwordUtils.verifyPassword(user.getPassword(), existingUser.getPassword())) {
-            throw new RuntimeException("Credenciales inválidas");
+            throw new ApiException("Credenciales inválidas");
         }
 
         this.currentUser = existingUser;
@@ -46,7 +47,7 @@ public class SessionManager {
 
     public User register(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("El usuario ya existe");
+            throw new ApiException("El usuario ya existe");
         }
 
         Role staffRole = roleUtils.getEstablishedRole(UserRol.valueOf("STAFF"));
@@ -54,7 +55,6 @@ public class SessionManager {
         String hashedPassword = passwordUtils.hashPassword(user.getPassword());
 
         User newUser = new User(
-                UUID.randomUUID(),
                 user.getEmail(),
                 hashedPassword,
                 staffRole,

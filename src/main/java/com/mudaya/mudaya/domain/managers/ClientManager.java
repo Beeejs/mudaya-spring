@@ -40,9 +40,6 @@ public class ClientManager {
     }
 
     public Client create(Client client) {
-        if (client.getId() == null) {
-            client.setId(UUID.randomUUID());
-        }
         return clientRepository.save(client);
     }
 

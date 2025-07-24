@@ -30,6 +30,14 @@ public abstract class People {
   private Sexo sexo;
   public People() {} // Lo generamos por JPA
 
+  public People(String name, String surname, String phoneNumber, String dni, Sexo Sexo) {
+    this.name = name;
+    this.surname = surname;
+    this.phoneNumber = phoneNumber;
+    this.dni = dni;
+    this.sexo = Sexo;
+  }
+
   public People(UUID id, String name, String surname, String phoneNumber, String dni, Sexo Sexo) {
     this.id = id;
     this.name = name;
@@ -65,9 +73,6 @@ public abstract class People {
   }
 
   /* Setters */
-  public void setId(UUID id) {
-    this.id = id;
-  }
 
   public void setName(String name) {
     this.name = name;

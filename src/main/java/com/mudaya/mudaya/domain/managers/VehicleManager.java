@@ -2,6 +2,7 @@ package com.mudaya.mudaya.domain.managers;
 
 import com.mudaya.mudaya.data.repositories.VehicleRepository;
 import com.mudaya.mudaya.domain.entities.Vehicle;
+import com.mudaya.mudaya.presentation.utils.exceptions.ApiException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,9 @@ public class VehicleManager {
         return vehicleRepository.findAll();
     }
 
-    public Optional<Vehicle> getOne(UUID id) {
-        return vehicleRepository.findById(id);
+    public Vehicle getOne(UUID id) {
+        return vehicleRepository.findById(id)
+            .orElseThrow(() -> new ApiException("Vehiculo no encontrado"));
     }
 
     public Optional<Vehicle> getOneByField(String field, String value) {
@@ -36,7 +38,7 @@ public class VehicleManager {
     public Vehicle create(Vehicle vehicle) {
         boolean exists = vehicleRepository.findByLicensePlateIgnoreCase(vehicle.getLicensePlate()).isPresent();
         if (exists) {
-            throw new RuntimeException("Ya existe un vehículo con la misma patente");
+            throw new ApiException("Ya existe un vehículo con la misma patente");
         }
         return vehicleRepository.save(vehicle);
     }
@@ -47,7 +49,7 @@ public class VehicleManager {
 
     public void delete(UUID id) {
         if (!vehicleRepository.existsById(id)) {
-            throw new RuntimeException("El vehiculo no existe");
+            throw new ApiException("El vehiculo no existe");
         }
         vehicleRepository.deleteById(id);
     }

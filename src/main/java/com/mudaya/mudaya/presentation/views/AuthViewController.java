@@ -28,15 +28,27 @@ public class AuthViewController {
     @PostMapping("/login")
     public String login(@RequestParam String email,
                         @RequestParam String password,
-                        HttpSession session) {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
+                        HttpSession session,
+                        org.springframework.ui.Model model) {
+        try {
+            User user = new User();
+            user.setEmail(email);
+            user.setPassword(password);
 
-        User loggedUser = sessionManager.login(user);
-        session.setAttribute("currentUser", loggedUser);
+            User loggedUser = sessionManager.login(user);
+            session.setAttribute("currentUser", loggedUser);
 
-        return "redirect:/";
+            return "redirect:/";
+        }
+        catch (RuntimeException e) {
+            model.addAttribute("loginError", e.getMessage());
+            return "login";
+        }
+    }
+
+    @GetMapping("/register")
+    public String registerPage() {
+        return "register"; // Esto carga el template nuevamente sin hacer peticion
     }
 
     @PostMapping("/register")
@@ -47,19 +59,26 @@ public class AuthViewController {
                            @RequestParam String telephoneNumber,
                            @RequestParam String DNI,
                            @RequestParam Sexo sexo,
-                           HttpSession session) {
-        User newUser = new User();
-        newUser.setEmail(email);
-        newUser.setPassword(password);
-        newUser.setName(name);
-        newUser.setSurname(surname);
-        newUser.setPhoneNumber(telephoneNumber);
-        newUser.setDni(DNI);
-        newUser.setSexo(sexo);
+                           HttpSession session,
+                           org.springframework.ui.Model model) {
+        try {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setPassword(password);
+            newUser.setName(name);
+            newUser.setSurname(surname);
+            newUser.setPhoneNumber(telephoneNumber);
+            newUser.setDni(DNI);
+            newUser.setSexo(sexo);
 
-        User registeredUser = sessionManager.register(newUser);
-        session.setAttribute("currentUser", registeredUser);
+            User registeredUser = sessionManager.register(newUser);
+            session.setAttribute("currentUser", registeredUser);
 
-        return "redirect:/";
+            return "redirect:/";
+        } catch (RuntimeException e) {
+            model.addAttribute("registerError", e.getMessage());
+            return "register";
+        }
     }
+
 }
