@@ -1,0 +1,5 @@
+<!-- Componente para inputs -->
+<div th:fragment="input(fieldName, labelText, fieldType='text')" class="mb-3">
+  <label th:for="${fieldName}" th:text="${labelText}" class="form-label"></label>
+  <input th:type="${fieldType}" th:id="${fieldName}" th:name="${fieldName}" class="form-control" required />
+</div>

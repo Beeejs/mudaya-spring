@@ -13,8 +13,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // desactiva protección CSRF
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()); // permite todo sin login
+                .csrf(csrf -> csrf.disable())
+                // Solo bloqueo/desbloqueo de recursos estáticos, el resto lo hará el interceptor
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register").permitAll()
+                        .anyRequest().permitAll()
+                )
+                // Deshabilito el manejo de login de Spring
+                .formLogin(form -> form.disable())
+                .httpBasic(httpBasic -> httpBasic.disable());
         return http.build();
     }
 
@@ -23,3 +30,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(10);
     }
 }
+

@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 @Table(name = "clients")
 public class Client extends People{ // Cliente que pidió la mudanza
 
-  protected Client() {super();} // requerido por JPA
+  public Client() {super();} // requerido por JPA
 
   public Client(UUID id, String name, String surname, String phoneNumber, String dni, Sexo Sexo) {
     super(id, name, surname, phoneNumber, dni, Sexo);

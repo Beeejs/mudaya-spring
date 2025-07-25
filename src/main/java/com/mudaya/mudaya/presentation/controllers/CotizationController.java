@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/cotizations")
+@RequestMapping("/api/cotizations")
 public class CotizationController {
 
     private final CotizationManager cotizationManager;

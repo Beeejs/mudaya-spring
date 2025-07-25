@@ -1,11 +1,11 @@
 package com.mudaya.mudaya.presentation.views;
 
-import com.mudaya.mudaya.domain.entities.User;
 import com.mudaya.mudaya.domain.enums.Sexo;
+import com.mudaya.mudaya.domain.entities.User;
 import com.mudaya.mudaya.domain.managers.SessionManager;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,21 +15,33 @@ public class AuthViewController {
 
     private final SessionManager sessionManager;
 
-    @Autowired
     public AuthViewController(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
     }
 
+    /** Login: si ya hay sesión, redirige a / */
     @GetMapping("/login")
-    public String loginPage() {
-        return "login"; // carga login.html desde templates
+    public String loginPage(HttpSession session,
+                            @RequestParam(value="logout", required=false) String logout,
+                            Model model) {
+        if (session.getAttribute("currentUser") != null) {
+            return "redirect:/";
+        }
+        if (logout != null) {
+            model.addAttribute("logoutMsg", "Has cerrado sesión correctamente");
+        }
+        return "login";
     }
 
+    /** Procesar login con tu SessionManager */
     @PostMapping("/login")
     public String login(@RequestParam String email,
                         @RequestParam String password,
                         HttpSession session,
-                        org.springframework.ui.Model model) {
+                        Model model) {
+        if (session.getAttribute("currentUser") != null) {
+            return "redirect:/";
+        }
         try {
             User user = new User();
             user.setEmail(email);
@@ -37,20 +49,23 @@ public class AuthViewController {
 
             User loggedUser = sessionManager.login(user);
             session.setAttribute("currentUser", loggedUser);
-
             return "redirect:/";
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             model.addAttribute("loginError", e.getMessage());
             return "login";
         }
     }
 
+    /** Register: si ya hay sesión, redirige a / */
     @GetMapping("/register")
-    public String registerPage() {
-        return "register"; // Esto carga el template nuevamente sin hacer peticion
+    public String registerPage(HttpSession session) {
+        if (session.getAttribute("currentUser") != null) {
+            return "redirect:/";
+        }
+        return "register";
     }
 
+    /** Procesar registro */
     @PostMapping("/register")
     public String register(@RequestParam String email,
                            @RequestParam String password,
@@ -60,7 +75,10 @@ public class AuthViewController {
                            @RequestParam String DNI,
                            @RequestParam Sexo sexo,
                            HttpSession session,
-                           org.springframework.ui.Model model) {
+                           Model model) {
+        if (session.getAttribute("currentUser") != null) {
+            return "redirect:/";
+        }
         try {
             User newUser = new User();
             newUser.setEmail(email);
@@ -73,7 +91,6 @@ public class AuthViewController {
 
             User registeredUser = sessionManager.register(newUser);
             session.setAttribute("currentUser", registeredUser);
-
             return "redirect:/";
         } catch (RuntimeException e) {
             model.addAttribute("registerError", e.getMessage());
@@ -81,4 +98,10 @@ public class AuthViewController {
         }
     }
 
+    /** Logout: invalida la sesión y redirige a login?logout */
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login?logout";
+    }
 }

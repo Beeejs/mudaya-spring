@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/moves")
+@RequestMapping("/api/moves")
 public class MoveController {
 
     private final MoveManager moveManager;

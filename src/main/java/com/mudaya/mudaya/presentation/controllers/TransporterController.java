@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/transporters")
+@RequestMapping("/api/transporters")
 public class TransporterController {
 
     private final TransporterManager transporterManager;

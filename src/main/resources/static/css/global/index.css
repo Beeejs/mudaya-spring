@@ -40,3 +40,14 @@ h1, h2, h3, h4, h5, h6, p
   background-color: var(--primary) !important;
   border: 1px solid var(--primary) !important;
 }
+
+.container-custom
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  height: 100vh;
+  width: 100%;
+}

@@ -1,16 +1,4 @@
-
-.container-home
-{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  height: 100vh;
-  width: 100%;
-}
-
-.container-home .username-home
+.container-custom .username-home
 {
   color: var(--primary);
 }
