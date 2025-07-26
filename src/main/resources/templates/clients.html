@@ -24,8 +24,10 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/clients}">Clientes</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+                        <li class="nav-item"><a class="nav-link active" th:href="@{/clients}">Clientes</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/vehicles}">Vehículos</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/transporters}">Transporters</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/signout}"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
                     </ul>
                 </div>
                 <div class="user-info">
@@ -36,22 +38,31 @@
         </nav>
         <section class="container-custom my-5">
             <div class="container">
-                <h2>Lista de Productos</h2>
+                <div class="d-flex align-items-center mb-3">
+                    <h2>Lista de Clientes</h2>
+                    <a class="btn btn-success ms-auto" th:href="@{/clients/new}">
+                        <i class="fas fa-plus"></i> Nuevo
+                    </a>
+                </div>
                 <hr>
 
-                <div class="search-form">
-                    <!-- Formulario de búsqueda -->
-                  <!--  <form method="GET" action="products.php" class="form-inline my-3">
-                        <input type="text" name="search" class="form-control mr-2" placeholder="Buscar producto" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                    </form>-->
+                <div class="search-form d-flex align-items-center mb-3">
+                    <!-- Formulario de búsqueda crece al máximo -->
+                    <form class="d-flex flex-grow-1 me-3" th:action="@{/clients}" method="get">
+                        <input
+                                class="form-control flex-grow-1 me-2"
+                                type="search"
+                                name="filter"
+                                placeholder="Buscar por nombre o DNI"
+                                th:value="${currentFilter}"
+                        />
+                        <button class="btn btn-outline-primary" type="submit">Buscar</button>
+                    </form>
 
-                    <!-- Botón para agregar -->
-                    <div class="btn-add-product">
-                        <a class="btn btn-success" th:href="@{/clients/new}">
-                            <i class="fas fa-plus"></i> Nuevo
-                        </a>
-                    </div>
+                    <!-- Botón para hacer un reload -->
+                    <a th:href="@{/clients}" class="btn btn-outline-info ms-auto" title="Recargar">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
                 </div>
 
                 <!-- Tabla de Clientes -->
@@ -77,11 +88,16 @@
                             <a th:href="@{/clients/edit/{id}(id=${c.id})}"
                                class="btn btn-primary btn-sm">Ver</a>
                             <form th:action="@{/clients/delete/{id}(id=${c.id})}"
-                                  method="post" onsubmit="return confirm('¿Eliminar cliente?');">
+                                  method="post">
                                 <button type="submit" class="btn btn-danger btn-sm">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
+                            <!-- Ver cotizaciones -->
+                            <a th:href="@{/cotizations/client/{clientId}(clientId=${c.id})}"
+                               class="btn btn-info btn-sm">
+                                <i class="fas fa-file-invoice-dollar"></i> Cotizaciones
+                            </a>
                         </td>
                     </tr>
                     </tbody>
@@ -93,18 +109,18 @@
     <div th:replace="components/footer :: footer"></div>
 
     <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Alerta de éxito-->
     <script th:if="${successMessage}" th:inline="javascript">
         /*<![CDATA[*/
         Swal.fire({
             icon: 'success',
-            title: '¡Éxito!',
-            text: '[[${successMessage}]]',
+            title: '¡Exito!',
+            text: [[${successMessage}]],
             timer: 2000,
             showConfirmButton: false
         });
@@ -117,7 +133,7 @@
         Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: '[[${clientsError}]]'
+            text: [[${clientsError}]]
         });
         /*]]>*/
     </script>

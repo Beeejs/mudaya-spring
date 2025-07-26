@@ -1,6 +1,7 @@
 package com.mudaya.mudaya.domain.entities;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +26,7 @@ public class Cotization {
   private String destinationAddress;
 
   @Column(name = "requesteddate", nullable = false)
+  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
   private LocalDateTime requestedDate;
 
   @ManyToMany
@@ -96,6 +98,7 @@ public class Cotization {
   }
 
   /* Setters */
+  public void setId(UUID id) {this.id = id;}
 
   public void setClient(Client client) {
     this.client = client;

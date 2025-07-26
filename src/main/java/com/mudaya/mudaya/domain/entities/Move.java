@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.mudaya.mudaya.domain.enums.MovingState;
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "movings")
@@ -21,6 +22,7 @@ public class Move {
   private MovingState state;
 
   @Column(name = "movingdatetime", nullable = false)
+  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
   private LocalDateTime movingDateTime;
 
   @ManyToOne
@@ -32,9 +34,9 @@ public class Move {
   private User user;
 
   @OneToMany(mappedBy = "move", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<MoveAssignment> transporters;
+  private List<MoveAssignment> transporters = new ArrayList<>();
 
-  protected Move() {} // Constructor vacío para JPA
+  public Move() {} // Constructor vacío para JPA
 
   public Move(UUID id, List<MoveAssignment> transporters, User user, Cotization cotization, LocalDateTime movingDateTime, MovingState state) {
     this.id = id;
@@ -50,7 +52,7 @@ public class Move {
     return id;
   }
 
-  public List<MoveAssignment> getTransporter() {
+  public List<MoveAssignment> getTransporters() {
     return transporters;
   }
 
@@ -72,8 +74,8 @@ public class Move {
 
   /* Setters */
 
-  public void setTransporter(ArrayList<MoveAssignment> transporters) {
-    this.transporters = transporters;
+  public void setTransporters(ArrayList<MoveAssignment> transporters) {
+    this.transporters = transporters != null ? transporters : new ArrayList<>();
   }
 
   public void setUser(User user) {

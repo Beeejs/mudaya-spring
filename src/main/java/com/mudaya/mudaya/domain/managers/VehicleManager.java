@@ -44,6 +44,9 @@ public class VehicleManager {
     }
 
     public UUID update(Vehicle vehicle) {
+        if (!vehicleRepository.existsById(vehicle.getId())) {
+            throw new RuntimeException("Vehiculo no existe");
+        }
         return vehicleRepository.save(vehicle).getId();
     }
 

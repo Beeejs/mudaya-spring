@@ -16,7 +16,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 // Solo bloqueo/desbloqueo de recursos estáticos, el resto lo hará el interceptor
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/register", "/signout").permitAll()
                         .anyRequest().permitAll()
                 )
                 // Deshabilito el manejo de login de Spring

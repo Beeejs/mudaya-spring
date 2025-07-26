@@ -14,7 +14,7 @@ public class Transporter extends Employee {
   @Column(nullable = false)
   private int license; // Agregamos la licencia de conducion (numero - mismo que doc)
 
-  protected Transporter() {super();} // Requerido por JPA
+  public Transporter() {super();} // Requerido por JPA
 
   public Transporter(UUID id, String name, String surname, String phoneNumber, String DNI, Sexo sexo, int license) {
     super(id, name, surname, phoneNumber, DNI, sexo);

@@ -20,11 +20,40 @@ public class MoveManager {
     }
 
     public List<Move> getAll(String filter, LocalDate date, MovingState state, Integer limit) {
-        List<Move> result = moveRepository.buscarFiltrado(filter, date, state);
-        if (limit != null && limit > 0 && result.size() > limit) {
-            return result.subList(0, limit);
+        // 1) Traigo todo ya ordenado
+        List<Move> list = moveRepository.findAllByOrderByMovingDateTimeDesc();
+
+        // 2) Filtro por nombre/apellido de cliente si viene filter
+        if (filter != null && !filter.isBlank()) {
+            String f = filter.toLowerCase();
+            list = list.stream()
+                    .filter(m ->
+                            m.getCotization().getClient().getName().toLowerCase().contains(f) ||
+                                    m.getCotization().getClient().getSurname().toLowerCase().contains(f)
+                    )
+                    .toList();
         }
-        return result;
+
+        // 3) Filtro por fecha si viene date
+        if (date != null) {
+            list = list.stream()
+                    .filter(m -> m.getMovingDateTime().toLocalDate().equals(date))
+                    .toList();
+        }
+
+        // 4) Filtro por estado si viene state
+        if (state != null) {
+            list = list.stream()
+                    .filter(m -> m.getState() == state)
+                    .toList();
+        }
+
+        // 5) Aplico límite si viene
+        if (limit != null && limit > 0 && list.size() > limit) {
+            return list.subList(0, limit);
+        }
+
+        return list;
     }
 
     public Move getOne(UUID id) {

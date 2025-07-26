@@ -9,26 +9,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class AuthViewController {
+public class SessionViewController {
 
     private final SessionManager sessionManager;
 
-    public AuthViewController(SessionManager sessionManager) {
+    public SessionViewController(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
     }
 
     /** Login: si ya hay sesión, redirige a / */
     @GetMapping("/login")
     public String loginPage(HttpSession session,
-                            @RequestParam(value="logout", required=false) String logout,
-                            Model model) {
+                            Model model, RedirectAttributes redirectAttributes) {
         if (session.getAttribute("currentUser") != null) {
             return "redirect:/";
-        }
-        if (logout != null) {
-            model.addAttribute("logoutMsg", "Has cerrado sesión correctamente");
         }
         return "login";
     }
@@ -38,7 +35,7 @@ public class AuthViewController {
     public String login(@RequestParam String email,
                         @RequestParam String password,
                         HttpSession session,
-                        Model model) {
+                        Model model, RedirectAttributes redirectAttributes) {
         if (session.getAttribute("currentUser") != null) {
             return "redirect:/";
         }
@@ -49,6 +46,7 @@ public class AuthViewController {
 
             User loggedUser = sessionManager.login(user);
             session.setAttribute("currentUser", loggedUser);
+            redirectAttributes.addFlashAttribute("authMsg", "Has iniciado sesión correctamente");
             return "redirect:/";
         } catch (RuntimeException e) {
             model.addAttribute("loginError", e.getMessage());
@@ -75,7 +73,7 @@ public class AuthViewController {
                            @RequestParam String DNI,
                            @RequestParam Sexo sexo,
                            HttpSession session,
-                           Model model) {
+                           Model model, RedirectAttributes redirectAttributes) {
         if (session.getAttribute("currentUser") != null) {
             return "redirect:/";
         }
@@ -91,6 +89,7 @@ public class AuthViewController {
 
             User registeredUser = sessionManager.register(newUser);
             session.setAttribute("currentUser", registeredUser);
+            redirectAttributes.addFlashAttribute("authMsg", "Has iniciado sesión correctamente");
             return "redirect:/";
         } catch (RuntimeException e) {
             model.addAttribute("registerError", e.getMessage());
@@ -98,10 +97,10 @@ public class AuthViewController {
         }
     }
 
-    /** Logout: invalida la sesión y redirige a login?logout */
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
+    /** Logout: invalida la sesión y redirige a login */
+    @GetMapping("/signout")
+    public String signout(HttpSession session, RedirectAttributes redirectAttributes) {
         session.invalidate();
-        return "redirect:/login?logout";
+        return "redirect:/login";
     }
 }

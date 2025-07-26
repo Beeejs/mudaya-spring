@@ -17,7 +17,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         // Rutas públicas
         if (uri.startsWith("/login") ||
                 uri.startsWith("/register") ||
-                uri.startsWith("/logout") ||
+                uri.startsWith("/signout") ||
                 uri.startsWith("/css/") ||
                 uri.startsWith("/js/") ||
                 uri.startsWith("/images/")) {
