@@ -74,7 +74,7 @@ public class Move {
 
   /* Setters */
 
-  public void setTransporters(ArrayList<MoveAssignment> transporters) {
+  public void setTransporters(List<MoveAssignment> transporters) {
     this.transporters = transporters != null ? transporters : new ArrayList<>();
   }
 

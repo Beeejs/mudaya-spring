@@ -3,6 +3,7 @@ package com.mudaya.mudaya.presentation.views;
 import com.mudaya.mudaya.domain.entities.Move;
 import com.mudaya.mudaya.domain.entities.MoveAssignment;
 import com.mudaya.mudaya.domain.entities.User;
+import com.mudaya.mudaya.domain.entities.Vehicle;
 import com.mudaya.mudaya.domain.enums.MovingState;
 import com.mudaya.mudaya.domain.managers.MoveManager;
 import com.mudaya.mudaya.domain.managers.CotizationManager;
@@ -92,6 +93,19 @@ public class MoveViewController {
     public String editMoveForm(@PathVariable UUID id, Model model) {
         try {
             Move m = moveManager.getOne(id);
+
+            // Extraigo los vehículos de la cotización
+            List<Vehicle> vehs = m.getCotization().getVehicles();
+            List<MoveAssignment> assigns = m.getTransporters();
+
+            // Agregao tantos MoveAssignment como vehículos falten
+            for (int i = assigns.size(); i < vehs.size(); i++) {
+                MoveAssignment ma = new MoveAssignment();
+                ma.setVehicle(vehs.get(i));
+                assigns.add(ma);
+            }
+            m.setTransporters(assigns);
+
             model.addAttribute("move", m);
             model.addAttribute("cotizations", cotManager.getAll(null, null));
             model.addAttribute("vehicles", vehicleManager.getAll());

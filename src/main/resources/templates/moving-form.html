@@ -19,6 +19,7 @@
                     <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/clients}">Clientes</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/vehicles}">Vehículos</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/transporters}">Transporters</a></li>
                     <li class="nav-item"><a class="nav-link active" th:href="@{/movings}">Mudanzas</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/signout}"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
                 </ul>
@@ -43,14 +44,43 @@
                     <input th:field="*{movingDateTime}" type="datetime-local" class="form-control" required/>
                 </div>
 
-                <div class="mb-3">
+                <!-- COTIZACIÓN -->
+                <!-- En nuevo select -->
+                <div class="mb-3" th:if="${move.id == null}">
                     <label class="form-label">Cotización</label>
                     <select th:field="*{cotization.id}" class="form-select" required>
+                        <option value="" disabled th:selected="${move.cotization == null}">
+                            Selecciona cotización
+                        </option>
                         <option th:each="c : ${cotizations}"
                                 th:value="${c.id}"
-                                th:text="${#temporals.format(c.requestedDate,'yyyy-MM-dd') + ' | ' + c.originAddress + ' → ' + c.destinationAddress}">
+                                th:text="${#temporals.format(c.requestedDate,'yyyy-MM-dd')
+                               + ' | '
+                               + c.originAddress
+                               + ' → '
+                               + c.destinationAddress
+                               + ' | '
+                               + c.client.name
+                               + ' '
+                               + c.client.surname}">
                         </option>
                     </select>
+                </div>
+
+                <!-- muestro datos en solo lectura -->
+                <div class="mb-3" th:if="${move.id != null}">
+                    <label class="form-label">Cotización</label>
+                    <input type="hidden" th:field="*{cotization.id}" />
+                    <input type="text" class="form-control mt-1"
+                           th:value="${move.cotization.client.name} + ' ' + ${move.cotization.client.surname}"
+                           disabled/>
+                    <input type="text" class="form-control"
+                           th:value="${move.cotization.originAddress} + ' → ' +
+                     ${move.cotization.destinationAddress}"
+                           disabled/>
+                    <input type="text" class="form-control mt-1"
+                           th:value="${move.cotization.price}"
+                           disabled/>
                 </div>
 
                 <div class="mb-3">
@@ -63,12 +93,31 @@
                     </select>
                 </div>
 
-                <!-- Asignaciones (la primera fila, índice 0) -->
-                <div class="mb-3">
-                    <label class="form-label">Asignaciones</label>
-                    <div class="row g-2" id="assignments-container">
+                <!-- Asignaciones -->
+                <div class="mb-3" th:if="${move.id != null}">
+                    <label class="form-label" th:if="${move.id != null}">Asignaciones</label>
+
+                    <!-- Recorro cada vehículo de la cotización -->
+                    <div th:each="veh, iterStat : ${move.cotization.vehicles}"
+                         class="row g-2 mb-2">
+
+                        <!-- hidden para enviar vehicle.id fijo -->
+                        <input type="hidden"
+                               th:field="*{transporters[__${iterStat.index}__].vehicle.id}" />
+
+                        <!-- Muestro el vehículo (no editable) -->
                         <div class="col-md-6">
-                            <select name="transporters[0].transporter.id" class="form-select" required>
+                            <input type="text"
+                                   class="form-control"
+                                   th:value="${veh.brand} + ' ' + ${veh.model}"
+                                   disabled />
+                        </div>
+
+                        <!-- Select para el transportista -->
+                        <div class="col-md-6">
+                            <select class="form-select"
+                                    th:field="*{transporters[__${iterStat.index}__].transporter.id}"
+                                    required>
                                 <option value="">Selecciona transportista</option>
                                 <option th:each="t : ${transporters}"
                                         th:value="${t.id}"
@@ -76,22 +125,12 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col-md-6">
-                            <select name="transporters[0].vehicle.id" class="form-select" required>
-                                <option value="">Selecciona vehículo</option>
-                                <option th:each="v : ${vehicles}"
-                                        th:value="${v.id}"
-                                        th:text="${v.brand + ' ' + v.model}">
-                                </option>
-                            </select>
-                        </div>
+
                     </div>
-                    <button type="button" class="btn btn-link" onclick="addAssignmentRow()">
-                        <i class="fas fa-plus"></i> Agregar asignación
-                    </button>
                 </div>
 
-                <!-- Template oculto para nuevas filas -->
+
+                 <!--Template oculto para nuevas filas -->
                 <template id="assignment-template">
                     <div class="row g-2 mt-2">
                         <div class="col-md-6">

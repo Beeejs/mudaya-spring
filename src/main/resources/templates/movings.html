@@ -19,6 +19,7 @@
                     <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/clients}">Clientes</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/vehicles}">Vehículos</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/transporters}">Transporters</a></li>
                     <li class="nav-item"><a class="nav-link active" th:href="@{/movings}">Mudanzas</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/signout}"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
                 </ul>
@@ -67,38 +68,39 @@
                 </div>
             </form>
 
+            <!--TODO: Poner el cleinte que pertenece esa cotizacion -->
+            <!--TODO: Revisar en la cotizacion los vehiculos que se utilizan, si ya hay mudanzas asignadas para determiandos vehiculos o trasnporters no se muestra en las demas mudanzas que se quieran crear.-->
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>Fecha y Hora</th>
-                    <th>Cotización</th>
+                    <th>Recorrido</th>
+                    <th>Cliente</th>
                     <th>Estado</th>
-                    <th>Asignaciones</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="m : ${movings}">
-                    <td th:text="${#temporals.format(m.movingDateTime, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td th:text="${m.cotization.id}"></td>
-                    <td th:text="${m.state}"></td>
-                    <td>
-              <span th:each="a, stat : ${m.transporter}"
-                    th:text="${a.transporter.name + ' / ' + a.vehicle.licensePlate}"
-                    th:append="${!stat.last} ? ', ' : ''">
-              </span>
-                    </td>
-                    <td class="d-flex gap-1">
-                        <a th:href="@{/movings/edit/{id}(id=${m.id})}"
-                           class="btn btn-primary btn-sm">Ver</a>
-                        <form th:action="@{/movings/delete/{id}(id=${m.id})}" method="post">
-                            <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('¿Eliminar mudanza?');">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+                    <tr th:each="m : ${movings}">
+                        <td th:text="${#temporals.format(m.movingDateTime, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td>
+                            <span th:text="${m.cotization.originAddress} + ' → ' + ${m.cotization.destinationAddress}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${m.cotization.client.name} + ' ' + ${m.cotization.client.surname}"></span>
+                        </td>
+                        <td th:text="${m.state}"></td>
+                        <td class="d-flex gap-1">
+                            <a th:href="@{/movings/edit/{id}(id=${m.id})}"
+                               class="btn btn-primary btn-sm">Ver</a>
+                            <form th:action="@{/movings/delete/{id}(id=${m.id})}" method="post">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('¿Eliminar mudanza?');">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
