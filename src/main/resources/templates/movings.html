@@ -11,24 +11,7 @@
 </head>
 <body>
 <main>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/}">MUDAYA</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/clients}">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/vehicles}">Vehículos</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/transporters}">Transporters</a></li>
-                    <li class="nav-item"><a class="nav-link active" th:href="@{/movings}">Mudanzas</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/signout}"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
-                </ul>
-                <span class="navbar-text text-light">
-          <i class="fas fa-user"></i> [[${session.currentUser.name}]]
-        </span>
-            </div>
-        </div>
-    </nav>
+    <div th:replace="components/navbar :: navbar"></div>
 
     <section class="container-custom my-5">
         <div class="container">
@@ -56,10 +39,13 @@
                 </div>
                 <div class="col-md-3">
                     <select name="state" class="form-select">
-                        <option th:each="st: ${states}"
+                        <!-- Opción “Todos los estados” -->
+                        <option value="" th:selected="${state == null}">Todos los estados</option>
+                        <!-- Luego tus estados -->
+                        <option th:each="st : ${states}"
                                 th:value="${st}"
                                 th:text="${st}"
-                                th:selected="${st} == ${state}">
+                                th:selected="${st == state}">
                         </option>
                     </select>
                 </div>
@@ -68,8 +54,6 @@
                 </div>
             </form>
 
-            <!--TODO: Poner el cleinte que pertenece esa cotizacion -->
-            <!--TODO: Revisar en la cotizacion los vehiculos que se utilizan, si ya hay mudanzas asignadas para determiandos vehiculos o trasnporters no se muestra en las demas mudanzas que se quieran crear.-->
             <table class="table table-striped">
                 <thead>
                 <tr>

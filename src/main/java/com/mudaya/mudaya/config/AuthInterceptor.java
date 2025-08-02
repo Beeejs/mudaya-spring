@@ -1,5 +1,6 @@
 package com.mudaya.mudaya.config;
 
+import com.mudaya.mudaya.domain.entities.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,22 +15,35 @@ public class AuthInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler) throws Exception {
         String uri = request.getRequestURI();
-        // Rutas públicas
-        if (uri.startsWith("/login") ||
-                uri.startsWith("/register") ||
-                uri.startsWith("/signout") ||
-                uri.startsWith("/css/") ||
-                uri.startsWith("/js/") ||
-                uri.startsWith("/images/")) {
+        // rutas públicas…
+        if (uri.startsWith("/login")
+                || uri.startsWith("/register")
+                || uri.startsWith("/signout")
+                || uri.startsWith("/css/")
+                || uri.startsWith("/js/")
+                || uri.startsWith("/images/")) {
             return true;
         }
 
         HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("currentUser") != null) {
-            return true;
+        if (session == null || session.getAttribute("currentUser") == null) {
+            response.sendRedirect("/login");
+            return false;
         }
 
-        response.sendRedirect("/login");
-        return false;
+        User current = (User) session.getAttribute("currentUser");
+        String role = String.valueOf(current.getRole().getName());
+
+        // Si es STAFF, bloquear /vehicles/* y /transporters/*
+        if ("STAFF".equalsIgnoreCase(role)) {
+            if (uri.startsWith("/vehicles") || uri.startsWith("/transporters")) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return false;
+            }
+        }
+
+        // ADMIN tiene acceso a todoo
+        return true;
     }
+
 }

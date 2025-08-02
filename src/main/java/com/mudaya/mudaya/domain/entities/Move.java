@@ -93,4 +93,17 @@ public class Move {
   public void setState(MovingState state) {
     this.state = state;
   }
+
+  @Override
+  public String toString() {
+    return "Move{" +
+            "id=" + getId() +
+            ", dateTime=" + getMovingDateTime() +
+            ", state=" + getState() +
+            ", client=" + (getCotization() != null
+            ? getCotization().getClient().getName() + " " + getCotization().getClient().getSurname()
+            : "null") +
+            '}';
+  }
+
 }

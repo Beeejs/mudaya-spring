@@ -16,27 +16,9 @@
 </head>
 <body>
     <main>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <div>
-                    <a class="navbar-brand" th:href="@{/}">MUDAYA</a>
-                </div>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link active" th:href="@{/clients}">Clientes</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/vehicles}">Vehículos</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/transporters}">Transporters</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/movings}">Mudanzas</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/signout}"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
-                    </ul>
-                </div>
-                <div class="user-info">
-                    <i class="fas fa-user text-dark"></i>
-                    <span class="navbar-text text-light" th:text="'Hola, ' + ${session.currentUser.name}"></span>
-                </div>
-            </div>
-        </nav>
+        <!-- Navbar -->
+        <div th:replace="components/navbar :: navbar"></div>
+
         <section class="container-custom my-5">
             <div class="container">
                 <div class="d-flex align-items-center mb-3">
@@ -48,7 +30,6 @@
                 <hr>
 
                 <div class="search-form d-flex align-items-center mb-3">
-                    <!-- Formulario de búsqueda crece al máximo -->
                     <form class="d-flex flex-grow-1 me-3" th:action="@{/clients}" method="get">
                         <input
                                 class="form-control flex-grow-1 me-2"

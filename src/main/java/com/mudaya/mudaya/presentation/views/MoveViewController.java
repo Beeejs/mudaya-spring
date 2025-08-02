@@ -10,6 +10,7 @@ import com.mudaya.mudaya.domain.managers.CotizationManager;
 import com.mudaya.mudaya.domain.managers.TransporterManager;
 import com.mudaya.mudaya.domain.managers.VehicleManager;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,8 @@ public class MoveViewController {
     @GetMapping
     public String listMoves(Model model,
                             @RequestParam(required = false) String filter,
-                            @RequestParam(required = false) LocalDate date,
+                            @RequestParam(required = false)
+                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                             @RequestParam(required = false) MovingState state,
                             @RequestParam(defaultValue = "25") Integer limit) {
         try {
